@@ -1,0 +1,10 @@
+.jumbotron {
+    background-image: url(https://images.pexels.com/photos/1126384/pexels-photo-1126384.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260);
+color: white;
+}
+
+#add-train-btn {
+    background-color: rgb(253,188,158);
+    outline: rgb(253,188,158);
+    color: white;
+} 
