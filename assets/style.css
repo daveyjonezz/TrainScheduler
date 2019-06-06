@@ -8,3 +8,6 @@ color: white;
     outline: rgb(253,188,158);
     color: white;
 } 
+.center {
+    text-align: center;
+}

@@ -35,52 +35,62 @@ $("#add-train-btn").on("click", function (event) {
     $("#frequency-input").val("");
 });
 
-database.ref().on("child_added", function(childSnapshot){
+database.ref().on("child_added", function (childSnapshot) {
     console.log(childSnapshot.val());
 
     var trnInput = childSnapshot.val().trnInput;
     var destInput = childSnapshot.val().destInput;
     var timeInput = childSnapshot.val().timeInput;
     var frequencyInput = childSnapshot.val().frequencyInput;
+    var removeBtn = $("<button>")
+    removeBtn.addClass('btn btn-secondary btn-small delete');
+    removeBtn.html("<i class=\"fa fa-trash\"></i>")
+    
+    // Variable Reassignment
+    var tFrequency = frequencyInput;
+    var firstTime = timeInput;
 
-// Variable Reassignment
-var tFrequency = frequencyInput;
-var firstTime = timeInput;
+    // First Time
+    var firstTimeConverted = moment(firstTime, "HH:mm")
+    console.log(firstTimeConverted);
 
-// First Time
-var firstTimeConverted = moment(firstTime, "HH:mm")
-console.log(firstTimeConverted);
+    // Current Time
+    var currentTime = moment();
+    console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
 
-// Current Time
-var currentTime = moment();
-console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
+    // Difference between the times
+    var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
+    console.log("DIFFERENCE IN TIME: " + diffTime);
 
-// Difference between the times
-var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
-console.log("DIFFERENCE IN TIME: " + diffTime);
+    // Time apart (remainder)
+    var tRemainder = diffTime % tFrequency;
+    console.log(tRemainder);
 
-// Time apart (remainder)
-var tRemainder = diffTime % tFrequency;
-console.log(tRemainder);
+    // Minute Until Train
+    var tMinutesTillTrain = tFrequency - tRemainder;
+    console.log("MINUTES TILL TRAIN: " + tMinutesTillTrain);
 
-// Minute Until Train
-var tMinutesTillTrain = tFrequency - tRemainder;
-console.log("MINUTES TILL TRAIN: " + tMinutesTillTrain);
-
-// Next Train
-var nextTrain = moment().add(tMinutesTillTrain, "minutes");
-console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
-var nextTrainPretty = moment(nextTrain).format("hh:mm");
+    // Next Train
+    var nextTrain = moment().add(tMinutesTillTrain, "minutes");
+    console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
+    var nextTrainPretty = moment(nextTrain).format("hh:mm");
 
     var newRow = $("<tr>").append(
         $("<td>").text(trnInput),
         $("<td>").text(destInput),
-        $("<td>").text(frequencyInput),
-        $("<td>").text(nextTrainPretty),
-        $("<td>").text(tMinutesTillTrain),
-      );
-    
-      // Append the new row to the table
-      $("#train-table > tbody").append(newRow);
+        $("<td>").addClass("center").text(frequencyInput),
+        $("<td>").addClass("center").text(nextTrainPretty),
+        $("<td>").addClass("center").text(tMinutesTillTrain),
+        $("<td>").addClass("center").html(removeBtn),
+    );
+
+    // Append the new row to the table
+    $("#train-table > tbody").append(newRow);
+
+});
+// copied from https://www.tutorialrepublic.com/codelab.php?topic=bootstrap&file=table-with-add-and-delete-row-feature
+$(document).on("click", ".delete", function(){
+    $(this).parents("tr").remove();
+    // var del=database.ref().child("-L7p60IRXp29D54Pk3dw").remove();
 
 });
