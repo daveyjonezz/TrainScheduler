@@ -27,7 +27,7 @@ $("#add-train-btn").on("click", function (event) {
         timeInput: timeInput,
         frequencyInput: frequencyInput,
     };
-
+    // var childName = trnInput;
     database.ref().push(newTrn);
     $("#train-name-input").val("");
     $("#destination-input").val("");
@@ -45,6 +45,9 @@ database.ref().on("child_added", function (childSnapshot) {
     var removeBtn = $("<button>")
     removeBtn.addClass('btn btn-secondary btn-small delete');
     removeBtn.html("<i class=\"fa fa-trash\"></i>")
+    var keyName = childSnapshot.key;
+    console.log(keyName);
+    removeBtn.attr("data-key", keyName)
     
     // Variable Reassignment
     var tFrequency = frequencyInput;
@@ -61,7 +64,9 @@ database.ref().on("child_added", function (childSnapshot) {
     // Difference between the times
     var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
     console.log("DIFFERENCE IN TIME: " + diffTime);
+    if (diffTime >= 0) {
 
+    
     // Time apart (remainder)
     var tRemainder = diffTime % tFrequency;
     console.log(tRemainder);
@@ -73,10 +78,16 @@ database.ref().on("child_added", function (childSnapshot) {
     // Next Train
     var nextTrain = moment().add(tMinutesTillTrain, "minutes");
     console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
-    var nextTrainPretty = moment(nextTrain).format("hh:mm");
+    var nextTrainPretty = moment(nextTrain).format("hh:mm A");
+    } else {
+
+    var nextTrain = firstTimeConverted
+    var nextTrainPretty = moment(nextTrain).format("hh:mm A");
+
+};
 
     var newRow = $("<tr>").append(
-        $("<td>").text(trnInput),
+        $("<td>").addClass("trainName").text(trnInput),
         $("<td>").text(destInput),
         $("<td>").addClass("center").text(frequencyInput),
         $("<td>").addClass("center").text(nextTrainPretty),
@@ -86,11 +97,15 @@ database.ref().on("child_added", function (childSnapshot) {
 
     // Append the new row to the table
     $("#train-table > tbody").append(newRow);
-
+    
 });
 // copied from https://www.tutorialrepublic.com/codelab.php?topic=bootstrap&file=table-with-add-and-delete-row-feature
 $(document).on("click", ".delete", function(){
+    var userId = $(this).attr("data-key")
+    console.log(userId)
     $(this).parents("tr").remove();
     // var del=database.ref().child("-L7p60IRXp29D54Pk3dw").remove();
+    let userRef = database.ref().child(userId);
+    userRef.remove()
 
 });
