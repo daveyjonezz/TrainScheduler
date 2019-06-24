@@ -17,4 +17,4 @@ Bootstrap
 ### Developer:
 Davis Birsan
 
-#### Deploy this application at: https://alexw519.github.io/Project1/
+#### Deploy this application at: https://daveyjonezz.github.io/TrainScheduler/
